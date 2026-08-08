@@ -40,7 +40,9 @@ export function useUserColumns({ onRestoreLoginKey, onDeleteUser }: UseUserColum
         accessorKey: 'lastSeenAt',
         cell: ({ row }) => {
           const value = row.original.lastSeenAt;
-          return value ? format(new Date(value), "d 'de' MMMM, HH:mm", { locale: es }) : 'Nunca';
+          return value
+            ? format(new Date(value), "d 'de' MMMM yyyy, HH:mm a", { locale: es })
+            : 'Nunca';
         },
       },
       {

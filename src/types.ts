@@ -3,9 +3,26 @@ export interface ApiResponse<T> {
   result: T;
 }
 
+export interface Pagination<T> {
+  page: T[];
+  nextCursor: string | null;
+}
+
+export type PaginationParams = {
+  cursor: string | null;
+  limit: number;
+};
+
 export interface Admin {
   id: string;
   adminName: string;
+  createdAt: string;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  lastSeenAt: string;
   createdAt: string;
 }
 
@@ -19,14 +36,17 @@ export interface RestoreLoginKeyResult {
 
 export type ConversationType = 'PRIVATE' | 'GROUP';
 
+export type Members = {
+  id: string;
+  user: Pick<User, 'id' | 'username'>;
+};
+
 export interface Conversation {
   id: string;
-  privateKey: string | null;
   name: string | null;
-  type: ConversationType;
-  lastMessageId: string | null;
   createdAt: string;
   updatedAt: string;
+  members: Members[];
 }
 
 export interface MessageAttachment {
@@ -52,11 +72,4 @@ export interface Message {
 export interface ListConversationMessagesResult {
   messages: Message[];
   nextCursor: string | null;
-}
-
-export interface User {
-  id: string;
-  username: string;
-  lastSeenAt: string;
-  createdAt: string;
 }

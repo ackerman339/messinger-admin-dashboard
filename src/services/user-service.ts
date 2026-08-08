@@ -7,12 +7,16 @@ import type {
   RestoreLoginKeyResult,
   Conversation,
   ListConversationMessagesResult,
+  Pagination,
+  PaginationParams,
 } from '@/types';
 
 export const userService = {
-  listUsers: async () => {
-    const response = await httpClient.get<ApiResponse<{ users: User[] }>>('/admin/list-users');
-    return response.data.result.users;
+  listUsers: async (params: PaginationParams) => {
+    const response = await httpClient.get<ApiResponse<Pagination<User>>>('/admin/list-users', {
+      params,
+    });
+    return response.data.result;
   },
 
   restoreLoginKey: async (data: UserDto) => {
@@ -28,12 +32,12 @@ export const userService = {
     return response.data.result;
   },
 
-  listUserConversations: async (data: UserDto) => {
-    const response = await httpClient.get<ApiResponse<{ conversations: Conversation[] }>>(
+  listUserConversations: async (data: UserDto & PaginationParams) => {
+    const response = await httpClient.get<ApiResponse<Pagination<Conversation>>>(
       '/admin/list-user-conversations',
       { params: data },
     );
-    return response.data.result.conversations;
+    return response.data.result;
   },
 
   listConversationMessages: async (data: ListUserMessagesDto) => {

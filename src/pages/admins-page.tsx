@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
 import { adminService } from '@services/admin-service';
-import { DataTable } from '@/components/ui/data-table';
+import { useCursorPagination } from '@hooks/use-cursor-pagination';
+import { useInfiniteScrollSentinel } from '@hooks/use-infinite-scroll';
+import { DataTable } from '@components/ui/data-table';
 import { useAdminColumns } from '@hooks/use-admin-columns';
 import { Dialog } from '@components/ui/dialog';
 import { AlertDialog } from '@components/ui/alert-dialog';
@@ -11,25 +13,25 @@ import { AdminSchema, type AdminDto } from '@schemas/admin-schema';
 import type { Admin } from '@/types';
 
 export function AdminsPage() {
-  const [admins, setAdmins] = useState<Admin[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [adminToDelete, setAdminToDelete] = useState<Admin | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function loadAdmins() {
-      setIsLoading(true);
-      try {
-        const data = await adminService.listAdmins();
-        setAdmins(data);
-      } finally {
-        setIsLoading(false);
-      }
-    }
+  const {
+    items: admins,
+    setItems: setAdmins,
+    isInitialLoading,
+    isLoadingMore,
+    hasMore,
+    loadMore,
+  } = useCursorPagination({
+    fetchPage: (cursor) => adminService.listAdmins({ cursor, limit: 20 }),
+  });
 
-    loadAdmins();
-  }, []);
+  const sentinelRef = useInfiniteScrollSentinel({
+    onIntersect: loadMore,
+    enabled: hasMore && !isInitialLoading,
+  });
 
   const {
     register,
@@ -42,7 +44,7 @@ export function AdminsPage() {
     setFormError(null);
     try {
       const created = await adminService.createAdmin(data);
-      setAdmins((prev) => [...prev, created]);
+      setAdmins((prev) => [created, ...prev]);
       reset();
       setIsCreateOpen(false);
     } catch {
@@ -76,7 +78,9 @@ export function AdminsPage() {
       <DataTable
         columns={columns}
         data={admins}
-        isLoading={isLoading}
+        isLoading={isInitialLoading}
+        isLoadingMore={isLoadingMore}
+        sentinelRef={sentinelRef}
         emptyMessage='No hay administradores registrados.'
       />
 

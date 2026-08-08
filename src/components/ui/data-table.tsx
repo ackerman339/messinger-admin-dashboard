@@ -1,7 +1,8 @@
 import { flexRender, useTable } from '@tanstack/react-table';
-import { cn } from '@/lib/utils';
+import { cn } from '@lib/utils';
 import { tableFeatureSet } from '@lib/table-feature';
 
+import type { RefObject } from 'react';
 import type { ColumnDef, RowData } from '@tanstack/react-table';
 import type { TableFeatures } from '@lib/table-feature';
 
@@ -11,6 +12,8 @@ interface DataTableProps<TData extends RowData> {
   onRowClick?: (row: TData) => void;
   emptyMessage?: string;
   isLoading?: boolean;
+  isLoadingMore?: boolean;
+  sentinelRef?: RefObject<HTMLTableRowElement | null>;
 }
 
 export function DataTable<TData extends RowData>({
@@ -19,6 +22,8 @@ export function DataTable<TData extends RowData>({
   onRowClick,
   emptyMessage = 'No hay resultados.',
   isLoading = false,
+  isLoadingMore = false,
+  sentinelRef,
 }: DataTableProps<TData>) {
   const table = useTable({
     features: tableFeatureSet,
@@ -28,9 +33,9 @@ export function DataTable<TData extends RowData>({
 
   return (
     <div className='overflow-hidden rounded-xl border border-border'>
-      <div className='overflow-x-auto'>
+      <div className='max-h-[90vh] overflow-x-auto overflow-y-auto'>
         <table className='w-full text-sm'>
-          <thead className='border-b border-border bg-muted/40'>
+          <thead className='sticky top-0 border-b border-border bg-muted'>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -55,22 +60,39 @@ export function DataTable<TData extends RowData>({
                 </td>
               </tr>
             ) : table.getRowModel().rows.length > 0 ? (
-              table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  onClick={onRowClick ? () => onRowClick(row.original as TData) : undefined}
-                  className={cn(
-                    'border-b border-border last:border-0 hover:bg-muted/30',
-                    onRowClick && 'cursor-pointer',
-                  )}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className='px-4 py-3'>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              <>
+                {table.getRowModel().rows.map((row) => (
+                  <tr
+                    key={row.id}
+                    onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+                    className={cn(
+                      'border-b border-border last:border-0 hover:bg-muted/30',
+                      onRowClick && 'cursor-pointer',
+                    )}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id} className='px-4 py-3'>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+
+                {/* Fila invisible: el IntersectionObserver dispara loadMore() al llegar aquí */}
+                {sentinelRef && (
+                  <tr ref={sentinelRef} aria-hidden>
+                    <td colSpan={columns.length} className='h-1 p-0' />
+                  </tr>
+                )}
+
+                {isLoadingMore && (
+                  <tr>
+                    <td colSpan={columns.length} className='h-12 text-center text-text-secondary'>
+                      Cargando más...
                     </td>
-                  ))}
-                </tr>
-              ))
+                  </tr>
+                )}
+              </>
             ) : (
               <tr>
                 <td colSpan={columns.length} className='h-24 text-center text-text-secondary'>

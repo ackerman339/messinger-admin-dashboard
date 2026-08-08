@@ -1,32 +1,31 @@
-import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { userService } from '@services/user-service';
-import { DataTable } from '@/components/ui/data-table';
+import { useCursorPagination } from '@hooks/use-cursor-pagination';
+import { useInfiniteScrollSentinel } from '@hooks/use-infinite-scroll';
+import { DataTable } from '@components/ui/data-table';
 import { useConversationColumns } from '@hooks/use-conversation-columns';
-import type { Conversation } from '@/types';
 
 export function UserConversationsPage() {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
-  const columns = useConversationColumns();
+  const columns = useConversationColumns({ userId: userId! });
 
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    items: conversations,
+    isInitialLoading,
+    isLoadingMore,
+    hasMore,
+    loadMore,
+  } = useCursorPagination({
+    fetchPage: (cursor) =>
+      userService.listUserConversations({ userId: userId!, cursor, limit: 20 }),
+    deps: [userId],
+  });
 
-  useEffect(() => {
-    async function loadConversations() {
-      if (!userId) return;
-
-      setIsLoading(true);
-      try {
-        const data = await userService.listUserConversations({ userId });
-        setConversations(data);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadConversations();
-  }, [userId]);
+  const sentinelRef = useInfiniteScrollSentinel({
+    onIntersect: loadMore,
+    enabled: hasMore && !isInitialLoading,
+  });
 
   return (
     <div className='space-y-4'>
@@ -34,7 +33,9 @@ export function UserConversationsPage() {
       <DataTable
         columns={columns}
         data={conversations}
-        isLoading={isLoading}
+        isLoading={isInitialLoading}
+        isLoadingMore={isLoadingMore}
+        sentinelRef={sentinelRef}
         emptyMessage='Este usuario no tiene conversaciones.'
         onRowClick={(conversation) => navigate(`/users/${userId}/conversations/${conversation.id}`)}
       />

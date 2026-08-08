@@ -1,31 +1,34 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '@services/user-service';
-import { DataTable } from '@/components/ui/data-table';
+import { useCursorPagination } from '@hooks/use-cursor-pagination';
+import { useInfiniteScrollSentinel } from '@hooks/use-infinite-scroll';
+import { DataTable } from '@components/ui/data-table';
 import { useUserColumns } from '@hooks/use-user-columns';
 import { Dialog } from '@components/ui/dialog';
 import { AlertDialog } from '@components/ui/alert-dialog';
+import { useState } from 'react';
 import type { User } from '@/types';
 
 export function UsersPage() {
   const navigate = useNavigate();
-  const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [restoredKey, setRestoredKey] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function loadUsers() {
-      setIsLoading(true);
-      try {
-        const data = await userService.listUsers();
-        setUsers(data);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadUsers();
-  }, []);
+  const {
+    items: users,
+    setItems: setUsers,
+    isInitialLoading,
+    isLoadingMore,
+    hasMore,
+    loadMore,
+  } = useCursorPagination({
+    fetchPage: (cursor) => userService.listUsers({ cursor, limit: 20 }),
+  });
+
+  const sentinelRef = useInfiniteScrollSentinel({
+    onIntersect: loadMore,
+    enabled: hasMore && !isInitialLoading,
+  });
 
   const onRestoreLoginKey = async (user: User) => {
     const { loginKey } = await userService.restoreLoginKey({ userId: user.id });
@@ -48,7 +51,9 @@ export function UsersPage() {
       <DataTable
         columns={columns}
         data={users}
-        isLoading={isLoading}
+        isLoading={isInitialLoading}
+        isLoadingMore={isLoadingMore}
+        sentinelRef={sentinelRef}
         emptyMessage='No hay usuarios registrados.'
         onRowClick={(user) => navigate(`/users/${user.id}`)}
       />

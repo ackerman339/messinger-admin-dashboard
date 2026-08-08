@@ -6,7 +6,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type { TableFeatures } from '@lib/table-feature';
 import type { Conversation } from '@/types';
 
-export function useConversationColumns() {
+export function useConversationColumns({ userId }: { userId: string }) {
   return useMemo<ColumnDef<TableFeatures, Conversation>[]>(
     () => [
       {
@@ -15,10 +15,17 @@ export function useConversationColumns() {
         cell: (info) => info.getValue(),
       },
       {
-        header: 'Nombre',
-        accessorKey: 'name',
+        header: 'Conversó con',
+        accessorKey: 'members',
         cell: ({ row }) => {
-          return row.original.name || 'Sin nombre';
+          return (
+            <p className='truncate max-w-80'>
+              {row.original.members
+                .filter((member) => member.user.id !== userId)
+                .map((conversation) => conversation.user.username)
+                .join(', ')}
+            </p>
+          );
         },
       },
       {
@@ -34,6 +41,6 @@ export function useConversationColumns() {
           format(new Date(row.original.updatedAt), "d 'de' MMMM yyyy", { locale: es }),
       },
     ],
-    [],
+    [userId],
   );
 }

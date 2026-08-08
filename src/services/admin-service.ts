@@ -1,7 +1,7 @@
 import { httpClient } from '@/http-client';
 import type { AdminDto } from '@schemas/admin-schema';
 import type { UserDto } from '@schemas/user-schema';
-import type { ApiResponse, Admin, SignInResult } from '@/types';
+import type { ApiResponse, Admin, SignInResult, Pagination, PaginationParams } from '@/types';
 
 export const adminService = {
   signIn: async (data: AdminDto) => {
@@ -14,9 +14,11 @@ export const adminService = {
     return response.data.result;
   },
 
-  listAdmins: async () => {
-    const response = await httpClient.get<ApiResponse<{ admins: Admin[] }>>('/admin/list-admins');
-    return response.data.result.admins;
+  listAdmins: async (params: PaginationParams) => {
+    const response = await httpClient.get<ApiResponse<Pagination<Admin>>>('/admin/list-admins', {
+      params,
+    });
+    return response.data.result;
   },
 
   deleteAdmin: async (data: UserDto) => {
