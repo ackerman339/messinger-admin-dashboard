@@ -3,12 +3,14 @@ import type { Pagination } from '@/types';
 
 interface UseCursorPaginationParams<TResponse> {
   fetchPage: (cursor: string | null) => Promise<Pagination<TResponse>>;
+  reverse?: boolean;
   // Resets and reloads the first page when these change (e.g. filters, userId).
   deps?: unknown[];
 }
 
 export function useCursorPagination<TItem>({
   fetchPage,
+  reverse = false,
   deps = [],
 }: UseCursorPaginationParams<TItem>) {
   const [items, setItems] = useState<TItem[]>([]);
@@ -21,23 +23,32 @@ export function useCursorPagination<TItem>({
   // Keep the latest fetchPage without re-triggering the effect below on every render.
   const fetchPageRef = useRef(fetchPage);
 
-  const loadPage = useCallback(async (cursor: string | null, isFirstPage: boolean) => {
-    if (isFirstPage) setIsInitialLoading(true);
-    else setIsLoadingMore(true);
-    setError(null);
+  const loadPage = useCallback(
+    async (cursor: string | null, isFirstPage: boolean) => {
+      if (isFirstPage) setIsInitialLoading(true);
+      else setIsLoadingMore(true);
+      setError(null);
 
-    try {
-      const response = await fetchPageRef.current(cursor);
-      setItems((prev) => (isFirstPage ? response.page : [...prev, ...response.page]));
-      setNextCursor(response.nextCursor ?? null);
-      setHasMore(response.nextCursor !== null);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('Error al cargar datos'));
-    } finally {
-      setIsInitialLoading(false);
-      setIsLoadingMore(false);
-    }
-  }, []);
+      try {
+        const response = await fetchPageRef.current(cursor);
+        setItems((prev) =>
+          isFirstPage
+            ? response.page
+            : reverse
+              ? [...response.page, ...prev]
+              : [...prev, ...response.page],
+        );
+        setNextCursor(response.nextCursor ?? null);
+        setHasMore(response.nextCursor !== null);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('Error al cargar datos'));
+      } finally {
+        setIsInitialLoading(false);
+        setIsLoadingMore(false);
+      }
+    },
+    [reverse],
+  );
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect

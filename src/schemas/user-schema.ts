@@ -7,7 +7,7 @@ export const UserSchema = z.object({
 export const ListUserMessagesSchema = z.object({
   userId: z.uuid(),
   conversationId: z.uuid(),
-  cursor: z.uuid().optional(),
+  cursor: z.uuid().nullable(),
   limit: z.coerce.number().int().min(1).max(50).default(30),
 });
 

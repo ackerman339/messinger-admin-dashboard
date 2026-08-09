@@ -6,15 +6,12 @@ interface UseInfiniteScrollSentinelParams {
   rootMargin?: string;
 }
 
-export function useInfiniteScrollSentinel({
+export function useInfiniteScrollSentinel<TElement extends Element = HTMLTableRowElement>({
   onIntersect,
   enabled = true,
   rootMargin = '200px',
 }: UseInfiniteScrollSentinelParams) {
-  const sentinelRef = useRef<HTMLTableRowElement | null>(null);
-
-  // Keep the latest callback without re-creating the observer on every render.
-  const onIntersectRef = useRef(onIntersect);
+  const sentinelRef = useRef<TElement | null>(null);
 
   useEffect(() => {
     const node = sentinelRef.current;
@@ -22,14 +19,16 @@ export function useInfiniteScrollSentinel({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0]?.isIntersecting) onIntersectRef.current();
+        if (entries[0]?.isIntersecting) {
+          onIntersect();
+        }
       },
       { rootMargin },
     );
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [enabled, rootMargin]);
+  }, [enabled, rootMargin, onIntersect]);
 
   return sentinelRef;
 }

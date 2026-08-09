@@ -70,6 +70,14 @@ export interface Message {
 }
 
 export interface ListConversationMessagesResult {
-  messages: Message[];
+  page: Message[];
   nextCursor: string | null;
 }
+
+export type DownloadDto = {
+  attachmentId: string;
+};
+
+export type DownloadResult = {
+  url: string;
+};
