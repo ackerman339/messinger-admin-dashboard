@@ -5,6 +5,7 @@ import { userService } from '@services/user-service';
 import { useCursorPagination } from '@hooks/use-cursor-pagination';
 import { useInfiniteScrollSentinel } from '@hooks/use-infinite-scroll';
 import { MessageBubble } from '@components/message-bubble';
+import { Breadcrumb } from '@components/ui/bread-crumb';
 
 export function ConversationMessagesPage() {
   const { userId, conversationId } = useParams<{ userId: string; conversationId: string }>();
@@ -52,12 +53,21 @@ export function ConversationMessagesPage() {
     bottomRef.current?.scrollIntoView({ behavior: 'instant', block: 'end' });
     isFirstLoadRef.current = false;
   }, [messages, isInitialLoading, isLoadingMore]);
+
   console.log(messages);
+
   return (
     <div className='flex h-[calc(100vh-8rem)] flex-col'>
+      <Breadcrumb
+        items={[
+          { label: 'Usuarios', to: '/users' },
+          { label: 'Conversaciones', to: `/users/${userId}` },
+          { label: 'Mensajes' },
+        ]}
+      />
       <h1 className='mb-4 text-lg font-semibold text-foreground'>Mensajes</h1>
 
-      <ScrollArea.Root className='max-h-[90vh] flex-1 rounded-xl border border-border'>
+      <ScrollArea.Root className='max-h-[85vh] flex-1 rounded-xl border border-border'>
         <ScrollArea.Viewport className='h-full'>
           <div className='chat-paper flex min-h-full w-full flex-col gap-2 px-32 py-6'>
             {isInitialLoading && (
@@ -70,12 +80,12 @@ export function ConversationMessagesPage() {
               </p>
             )}
 
-            {hasMore && <div ref={sentinelRef} />}
             {isLoadingMore && (
               <p className='text-center text-xs text-text-secondary'>
                 Cargando mensajes anteriores...
               </p>
             )}
+            {!isLoadingMore && <div ref={sentinelRef} />}
 
             {messages.map((message) => (
               <MessageBubble key={message.id} message={message} currentUserId={userId!} />

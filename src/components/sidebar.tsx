@@ -73,7 +73,7 @@ export function Sidebar() {
           type='button'
           onClick={handleLogout}
           className={[
-            'flex w-full items-center gap-3 rounded-lg px-3 py-2.5',
+            'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 cursor-pointer',
             'text-sm font-medium text-text-secondary',
             'transition-colors',
             'hover:bg-sidebar-hover hover:text-foreground',

@@ -55,7 +55,7 @@ export function MessageBubble({ message, currentUserId }: MessageBubbleProps) {
               }
 
               return (
-                <li key={attachment.id} className='text-accent'>
+                <li key={attachment.id} className='text-accent-foreground'>
                   <a href={url} download={attachment.fileName} className='hover:underline'>
                     {attachment.fileName}
                   </a>

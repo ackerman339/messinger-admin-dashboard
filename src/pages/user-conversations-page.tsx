@@ -2,8 +2,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { userService } from '@services/user-service';
 import { useCursorPagination } from '@hooks/use-cursor-pagination';
 import { useInfiniteScrollSentinel } from '@hooks/use-infinite-scroll';
-import { DataTable } from '@components/ui/data-table';
 import { useConversationColumns } from '@hooks/use-conversation-columns';
+import { DataTable } from '@components/ui/data-table';
+import { Breadcrumb } from '@components/ui/bread-crumb';
 
 export function UserConversationsPage() {
   const { userId } = useParams<{ userId: string }>();
@@ -29,6 +30,7 @@ export function UserConversationsPage() {
 
   return (
     <div className='space-y-4'>
+      <Breadcrumb items={[{ label: 'Usuarios', to: '/users' }, { label: 'Conversaciones' }]} />
       <h1 className='text-lg font-semibold text-foreground'>Conversaciones del usuario</h1>
       <DataTable
         columns={columns}
