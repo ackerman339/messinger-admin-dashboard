@@ -62,7 +62,7 @@ export function useUserColumns({ onRestoreLoginKey, onDeleteUser }: UseUserColum
                 e.stopPropagation();
                 onRestoreLoginKey(info.row.original);
               }}
-              className='rounded-md p-1.5 text-text-secondary hover:bg-muted hover:text-foreground'
+              className='rounded-md p-1.5 text-text-secondary hover:bg-muted hover:text-foreground cursor-pointer'
               title='Restaurar clave de acceso'
             >
               <RotateCcw className='size-4' />
@@ -73,7 +73,7 @@ export function useUserColumns({ onRestoreLoginKey, onDeleteUser }: UseUserColum
                 e.stopPropagation();
                 onDeleteUser(info.row.original);
               }}
-              className='rounded-md p-1.5 text-destructive hover:bg-destructive/10'
+              className='rounded-md p-1.5 text-destructive hover:bg-destructive/10 cursor-pointer'
               title='Eliminar usuario'
             >
               <Trash2 className='size-4' />
