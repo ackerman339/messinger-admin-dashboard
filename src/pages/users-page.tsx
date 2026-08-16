@@ -17,8 +17,7 @@ export function UsersPage() {
   const {
     items: users,
     setItems: setUsers,
-    isInitialLoading,
-    isLoadingMore,
+    isLoading,
     hasMore,
     loadMore,
   } = useCursorPagination({
@@ -27,7 +26,7 @@ export function UsersPage() {
 
   const sentinelRef = useInfiniteScrollSentinel({
     onIntersect: loadMore,
-    enabled: hasMore && !isInitialLoading,
+    enabled: hasMore && !isLoading,
   });
 
   const onRestoreLoginKey = async (user: User) => {
@@ -51,8 +50,7 @@ export function UsersPage() {
       <DataTable
         columns={columns}
         data={users}
-        isLoading={isInitialLoading}
-        isLoadingMore={isLoadingMore}
+        isLoading={isLoading}
         sentinelRef={sentinelRef}
         emptyMessage='No hay usuarios registrados.'
         onRowClick={(user) => navigate(`/users/${user.id}`)}

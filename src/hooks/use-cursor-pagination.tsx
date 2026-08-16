@@ -4,7 +4,6 @@ import type { Pagination } from '@/types';
 interface UseCursorPaginationParams<TResponse> {
   fetchPage: (cursor: string | null) => Promise<Pagination<TResponse>>;
   reverse?: boolean;
-  // Resets and reloads the first page when these change (e.g. filters, userId).
   deps?: unknown[];
 }
 
@@ -15,65 +14,122 @@ export function useCursorPagination<TItem>({
 }: UseCursorPaginationParams<TItem>) {
   const [items, setItems] = useState<TItem[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  // Keep the latest fetchPage without re-triggering the effect below on every render.
   const fetchPageRef = useRef(fetchPage);
+  const loadingRef = useRef(false);
+  const requestIdRef = useRef(0);
+  const previousDepsRef = useRef<unknown[] | null>(null);
+
+  useEffect(() => {
+    fetchPageRef.current = fetchPage;
+  }, [fetchPage]);
 
   const loadPage = useCallback(
-    async (cursor: string | null, isFirstPage: boolean) => {
-      if (isFirstPage) setIsInitialLoading(true);
-      else setIsLoadingMore(true);
+    async (cursor: string | null) => {
+      if (loadingRef.current) {
+        return;
+      }
+
+      loadingRef.current = true;
+
+      const requestId = ++requestIdRef.current;
+
+      setIsLoading(true);
       setError(null);
 
       try {
         const response = await fetchPageRef.current(cursor);
-        setItems((prev) =>
-          isFirstPage
-            ? response.page
-            : reverse
-              ? [...response.page, ...prev]
-              : [...prev, ...response.page],
-        );
-        setNextCursor(response.nextCursor ?? null);
-        setHasMore(response.nextCursor !== null);
+
+        // Ignore stale responses.
+        if (requestId !== requestIdRef.current) {
+          return;
+        }
+
+        setItems((prev) => (reverse ? [...response.page, ...prev] : [...prev, ...response.page]));
+
+        const newCursor = response.nextCursor ?? null;
+
+        setNextCursor(newCursor);
+        setHasMore(newCursor !== null);
       } catch (err) {
+        if (requestId !== requestIdRef.current) {
+          return;
+        }
+
         setError(err instanceof Error ? err : new Error('Error al cargar datos'));
       } finally {
-        setIsInitialLoading(false);
-        setIsLoadingMore(false);
+        if (requestId === requestIdRef.current) {
+          loadingRef.current = false;
+          setIsLoading(false);
+        }
       }
     },
     [reverse],
   );
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    const previousDeps = previousDepsRef.current;
+
+    const depsChanged =
+      previousDeps === null ||
+      previousDeps.length !== deps.length ||
+      previousDeps.some((value, index) => !Object.is(value, deps[index]));
+
+    if (!depsChanged) {
+      return;
+    }
+
+    previousDepsRef.current = deps;
+
+    requestIdRef.current += 1;
+
+    setItems([]);
+    setNextCursor(null);
     setHasMore(true);
-    loadPage(null, true);
+    setError(null);
+
+    loadPage(null);
+
+    // Dependencies intentionally control pagination reset.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
   const loadMore = useCallback(() => {
-    if (isInitialLoading || isLoadingMore || !hasMore) return;
-    loadPage(nextCursor, false);
-  }, [isInitialLoading, isLoadingMore, hasMore, nextCursor, loadPage]);
+    if (loadingRef.current) {
+      return;
+    }
+
+    if (!hasMore) {
+      return;
+    }
+
+    if (nextCursor === null) {
+      return;
+    }
+
+    loadPage(nextCursor);
+  }, [hasMore, nextCursor, loadPage]);
 
   const refresh = useCallback(() => {
+    requestIdRef.current += 1;
+
+    setItems([]);
+    setNextCursor(null);
     setHasMore(true);
-    loadPage(null, true);
+    setError(null);
+
+    loadPage(null);
   }, [loadPage]);
 
   return {
     items,
-    setItems, // exposed for optimistic updates (e.g. remove a row without a full refetch)
-    isInitialLoading,
-    isLoadingMore,
     hasMore,
     error,
+    isLoading,
+    setItems,
     loadMore,
     refresh,
   };

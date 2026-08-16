@@ -13,8 +13,7 @@ export function UserConversationsPage() {
 
   const {
     items: conversations,
-    isInitialLoading,
-    isLoadingMore,
+    isLoading,
     hasMore,
     loadMore,
   } = useCursorPagination({
@@ -25,7 +24,7 @@ export function UserConversationsPage() {
 
   const sentinelRef = useInfiniteScrollSentinel({
     onIntersect: loadMore,
-    enabled: hasMore && !isInitialLoading,
+    enabled: hasMore && !isLoading,
   });
 
   return (
@@ -35,8 +34,7 @@ export function UserConversationsPage() {
       <DataTable
         columns={columns}
         data={conversations}
-        isLoading={isInitialLoading}
-        isLoadingMore={isLoadingMore}
+        isLoading={isLoading}
         sentinelRef={sentinelRef}
         emptyMessage='Este usuario no tiene conversaciones.'
         onRowClick={(conversation) => navigate(`/users/${userId}/conversations/${conversation.id}`)}

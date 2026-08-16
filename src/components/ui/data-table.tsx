@@ -12,7 +12,6 @@ interface DataTableProps<TData extends RowData> {
   onRowClick?: (row: TData) => void;
   emptyMessage?: string;
   isLoading?: boolean;
-  isLoadingMore?: boolean;
   sentinelRef?: RefObject<HTMLTableRowElement | null>;
 }
 
@@ -22,7 +21,6 @@ export function DataTable<TData extends RowData>({
   onRowClick,
   emptyMessage = 'No hay resultados.',
   isLoading = false,
-  isLoadingMore = false,
   sentinelRef,
 }: DataTableProps<TData>) {
   const table = useTable({
@@ -82,14 +80,6 @@ export function DataTable<TData extends RowData>({
                 {sentinelRef && (
                   <tr ref={sentinelRef} aria-hidden>
                     <td colSpan={columns.length} className='h-1 p-0' />
-                  </tr>
-                )}
-
-                {isLoadingMore && (
-                  <tr>
-                    <td colSpan={columns.length} className='h-12 text-center text-text-secondary'>
-                      Cargando más...
-                    </td>
                   </tr>
                 )}
               </>
