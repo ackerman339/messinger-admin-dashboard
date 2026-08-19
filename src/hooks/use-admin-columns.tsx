@@ -25,7 +25,7 @@ export function useAdminColumns({ onDeleteAdmin }: UseAdminColumnsParams) {
       {
         header: 'Administrador',
         accessorKey: 'adminName',
-        cell: (info) => info.getValue(),
+        cell: ({ row }) => row.original.adminName,
       },
       {
         header: 'Creado',

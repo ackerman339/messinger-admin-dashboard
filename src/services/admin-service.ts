@@ -21,6 +21,10 @@ export const adminService = {
     return response.data.result;
   },
 
+  updatePassword: async (data: Pick<AdminDto, 'password'>) => {
+    await httpClient.patch('/admin/update-password', data);
+  },
+
   deleteAdmin: async (data: UserDto) => {
     const response = await httpClient.delete<ApiResponse<null>>('/admin/delete-admin', { data });
     return response.data.result;
