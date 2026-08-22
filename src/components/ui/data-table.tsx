@@ -30,7 +30,7 @@ export function DataTable<TData extends RowData>({
   });
 
   return (
-    <div className='overflow-hidden rounded-xl border border-border'>
+    <div className='overflow-y-auto rounded-xl border border-border'>
       <div className='max-h-[90vh] overflow-x-auto overflow-y-auto'>
         <table className='w-full text-sm'>
           <thead className='sticky top-0 border-b border-border bg-muted'>
