@@ -30,10 +30,10 @@ export function DataTable<TData extends RowData>({
   });
 
   return (
-    <div className='overflow-y-auto rounded-xl border border-border'>
-      <div className='max-h-[90vh] overflow-x-auto overflow-y-auto'>
+    <div className='rounded-xl border border-border'>
+      <div className='max-h-[90vh] overflow-y-auto'>
         <table className='w-full text-sm'>
-          <thead className='sticky top-0 border-b border-border bg-muted'>
+          <thead className='sticky top-0 z-10 border-b border-border bg-muted'>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -51,13 +51,7 @@ export function DataTable<TData extends RowData>({
           </thead>
 
           <tbody>
-            {isLoading ? (
-              <tr>
-                <td colSpan={columns.length} className='h-24 text-center text-text-secondary'>
-                  Cargando...
-                </td>
-              </tr>
-            ) : table.getRowModel().rows.length > 0 ? (
+            {table.getRowModel().rows.length > 0 ? (
               <>
                 {table.getRowModel().rows.map((row) => (
                   <tr
@@ -75,13 +69,6 @@ export function DataTable<TData extends RowData>({
                     ))}
                   </tr>
                 ))}
-
-                {/* Fila invisible: el IntersectionObserver dispara loadMore() al llegar aquí */}
-                {sentinelRef && (
-                  <tr ref={sentinelRef} aria-hidden>
-                    <td colSpan={columns.length} className='h-1 p-0' />
-                  </tr>
-                )}
               </>
             ) : (
               <tr>
@@ -92,6 +79,12 @@ export function DataTable<TData extends RowData>({
             )}
           </tbody>
         </table>
+        {sentinelRef && <div ref={sentinelRef}></div>}
+        {isLoading && (
+          <div className='flex items-center justify-center my-2'>
+            <span className='text-xs'>Cargando</span>
+          </div>
+        )}
       </div>
     </div>
   );
