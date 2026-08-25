@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -57,8 +58,17 @@ export function AdminsPage() {
       setAdmins((prev) => [created, ...prev]);
       reset();
       setIsCreateOpen(false);
-    } catch {
-      setFormError('No se pudo crear el administrador. Verifica los datos.');
+    } catch (error: unknown) {
+      if (!(error instanceof AxiosError)) {
+        console.error(error);
+        setFormError('No se puede crear el administrador');
+        return;
+      }
+
+      if (error.status === 409) {
+        setFormError('Administrador ya existe');
+        return;
+      }
     }
   };
 
@@ -70,7 +80,7 @@ export function AdminsPage() {
       resetUpdateFrom();
       setIsUpdateOpen(false);
     } catch {
-      setFormError('No se pudo crear el administrador. Verifica los datos.');
+      setFormError('No se pudo actualizar la clave, intenta mas tarde');
     }
   };
 

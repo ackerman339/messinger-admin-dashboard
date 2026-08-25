@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LockKeyhole, MessageCircle } from 'lucide-react';
@@ -7,6 +9,8 @@ import { AdminSchema, type AdminDto } from '@schemas/admin-schema';
 import { adminService } from '@services/admin-service';
 
 export function SignInPage() {
+  const [error, setError] = useState('');
+
   const {
     register,
     handleSubmit,
@@ -22,11 +26,30 @@ export function SignInPage() {
   const navigate = useNavigate();
 
   const onSubmit = async (data: AdminDto) => {
-    await adminService.signIn(data);
+    setError('');
+    try {
+      await adminService.signIn(data);
 
-    navigate('/users', {
-      replace: true,
-    });
+      navigate('/users', {
+        replace: true,
+      });
+    } catch (error: unknown) {
+      if (!(error instanceof AxiosError)) {
+        console.error(error);
+        setError('No se puede iniciar sesión');
+        return;
+      }
+
+      if (error.status === 404) {
+        setError('Administrador no encontrado');
+        return;
+      }
+
+      if (error.status === 401) {
+        setError('Clave inválida');
+        return;
+      }
+    }
   };
 
   return (
@@ -105,8 +128,8 @@ export function SignInPage() {
               {errors.password && (
                 <p className='text-sm text-destructive'>{errors.password.message}</p>
               )}
+              {error && <p className='text-sm text-destructive'>{error}</p>}
             </div>
-
             <button
               type='submit'
               disabled={isSubmitting}
