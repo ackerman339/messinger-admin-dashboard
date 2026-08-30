@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { fileService } from '@services/file-service';
+import { MessageAttachment } from '@components/attachments/message-attachment';
+
 import type { Message } from '@/types';
 
 interface MessageBubbleProps {
@@ -10,23 +10,7 @@ interface MessageBubbleProps {
 }
 
 export function MessageBubble({ message, currentUserId }: MessageBubbleProps) {
-  const [downloads, setDownloads] = useState<Map<string, string>>(new Map());
   const isOwn = message.senderId === currentUserId;
-
-  useEffect(() => {
-    if (!message.attachments || message.attachments.length === 0) return;
-
-    const loadDownloadUrls = async () => {
-      const entries: [string, string][] = [];
-      for (const attachment of message.attachments) {
-        const response = await fileService.downloadFile({ attachmentId: attachment.id });
-        entries.push([attachment.id, response.url]);
-      }
-      setDownloads(new Map(entries));
-    };
-
-    loadDownloadUrls();
-  }, [message]);
 
   return (
     <article className={isOwn ? 'flex justify-end' : 'flex justify-start'}>
@@ -36,32 +20,33 @@ export function MessageBubble({ message, currentUserId }: MessageBubbleProps) {
           isOwn ? 'rounded-br-sm bg-primary' : 'rounded-bl-sm bg-accent',
         ].join(' ')}
       >
-        <p className='text-[15px] leading-5 whitespace-pre-wrap wrap-break-word text-foreground'>
-          {message.content}
+        <p className='whitespace-pre-wrap wrap-break-word text-[15px] leading-5'>
+          {/^https?:\/\/\S+$/.test(message.content.trim()) ? (
+            <a
+              href={message.content.trim()}
+              target='_blank'
+              rel='noopener noreferrer'
+              className='text-accent-foreground underline hover:opacity-80'
+            >
+              {message.content}
+            </a>
+          ) : (
+            message.content
+          )}
         </p>
 
         {message.attachments?.length > 0 && (
-          <ul className='my-2 space-y-2'>
-            {message.attachments.map((attachment) => {
-              const url = downloads.get(attachment.id);
-              if (!url) return null;
-
-              if (attachment.contentType.startsWith('audio/')) {
-                return (
-                  <li key={attachment.id}>
-                    <audio controls preload='auto' src={url} className='max-w-full' />
-                  </li>
-                );
-              }
-
-              return (
-                <li key={attachment.id} className='text-accent-foreground'>
-                  <a href={url} download={attachment.fileName} className='hover:underline'>
-                    {attachment.fileName}
-                  </a>
-                </li>
-              );
-            })}
+          <ul
+            className='my-2 space-y-2'
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          >
+            {message.attachments.map((attachment) => (
+              <li key={attachment.id}>
+                <MessageAttachment attachment={attachment} />
+              </li>
+            ))}
           </ul>
         )}
 
