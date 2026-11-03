@@ -1,7 +1,7 @@
 import { httpClient } from '@/http-client';
 import type { AdminDto } from '@schemas/admin-schema';
-import type { UserDto } from '@schemas/user-schema';
-import type { ApiResponse, Admin, SignInResult, Pagination, PaginationParams } from '@/types';
+import type { UserDto, CreateUserDto } from '@schemas/user-schema';
+import type { ApiResponse, Admin, User, SignInResult, Pagination, PaginationParams } from '@/types';
 
 export const adminService = {
   signIn: async (data: AdminDto) => {
@@ -11,6 +11,11 @@ export const adminService = {
 
   createAdmin: async (data: AdminDto) => {
     const response = await httpClient.post<ApiResponse<Admin>>('/admin/create-admin', data);
+    return response.data.result;
+  },
+
+  createUser: async (data: CreateUserDto) => {
+    const response = await httpClient.post<ApiResponse<User>>('/admin/create-user', data);
     return response.data.result;
   },
 

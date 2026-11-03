@@ -143,7 +143,7 @@ export function ConversationMessagesPage() {
 
       <ScrollArea.Root className='max-h-[85vh] flex-1 rounded-xl border border-border'>
         <ScrollArea.Viewport ref={viewportRef} className='h-full'>
-          <div className='chat-paper flex min-h-full w-full flex-col gap-2 px-32 py-6'>
+          <div className='chat-paper flex min-h-screen w-full flex-col gap-2 px-32 py-6'>
             <div ref={sentinelRef} className='h-1' />
 
             {isLoading && (

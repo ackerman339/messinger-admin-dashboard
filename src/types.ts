@@ -24,6 +24,8 @@ export interface User {
   username: string;
   lastSeenAt: string;
   createdAt: string;
+  userCode: string;
+  loginKey: string;
 }
 
 export interface SignInResult {
