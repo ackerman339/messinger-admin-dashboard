@@ -36,7 +36,7 @@ export function useUserColumns({ onRestoreLoginKey, onDeleteUser }: UseUserColum
         ),
       },
       {
-        header: 'Codigo',
+        header: 'Código',
         accessorKey: 'userCode',
         cell: ({ row }) => <span>{row.original.userCode}</span>,
       },

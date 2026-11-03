@@ -77,7 +77,7 @@ export function UsersPage() {
       }
 
       if (error.status === 409) {
-        setFormError('Administrador ya existe');
+        setFormError('Este usuario ya existe');
         return;
       }
     } finally {
