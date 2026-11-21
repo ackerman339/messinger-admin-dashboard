@@ -232,7 +232,7 @@ export function AudioAttachment({ attachmentId, fileName, contentType }: AudioAt
 
   if (isLoadingUrl) {
     return (
-      <div className='flex h-12 w-72 items-center justify-center rounded-lg bg-slate-100'>
+      <div className='flex h-12 w-72 max-w-full items-center justify-center rounded-lg bg-slate-100'>
         <LoaderCircle className='animate-spin text-accent' size={20} />
       </div>
     );
@@ -291,7 +291,7 @@ export function AudioAttachment({ attachmentId, fileName, contentType }: AudioAt
         type='button'
         onClick={togglePlay}
         disabled={isBuffering && !isPlaying}
-        className='grid size-9 shrink-0 place-items-center rounded-full bg-accent text-white transition hover:bg-accent-hover disabled:cursor-wait disabled:opacity-70 cursor-pointer'
+        className='grid size-11 shrink-0 cursor-pointer place-items-center rounded-full bg-accent text-white transition hover:bg-accent-hover disabled:cursor-wait disabled:opacity-70 sm:size-9'
         aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
       >
         {isBuffering && !isPlaying ? (
@@ -315,7 +315,7 @@ export function AudioAttachment({ attachmentId, fileName, contentType }: AudioAt
         value={timeline.duration ? timeline.currentTime : 0}
         onChange={handleSeek}
         disabled={!timeline.duration || !timeline.canSeek}
-        className='h-1 min-w-0 flex-1 cursor-pointer accent-accent disabled:cursor-default'
+        className='h-8 min-w-0 flex-1 cursor-pointer accent-accent disabled:cursor-default sm:h-1'
         aria-label='Progreso del audio'
       />
 

@@ -86,15 +86,15 @@ export function MessageList({ userId, conversationId }: { userId: string; conver
   }
 
   return (
-    <section className='message-history relative isolate flex min-h-0 flex-1 overflow-hidden rounded-lg' aria-label='Historial de mensajes'>
+    <section className='message-history relative isolate flex min-h-0 min-w-0 flex-1 overflow-hidden rounded-lg' aria-label='Historial de mensajes'>
       {selectedMessage && (
-        <div className='absolute inset-x-0 top-0 z-10 flex min-h-16 flex-wrap items-center gap-2 border-t border-border bg-bg-app/95 px-4 shadow-lg backdrop-blur-sm'>
-          <button type='button' onClick={clearSelection} className='cursor-pointer rounded-full p-2 hover:bg-slate-100' aria-label='Cancelar selección'>
+        <div className='absolute inset-x-0 top-0 z-10 flex min-h-14 flex-wrap items-center gap-x-1 gap-y-0.5 border-t border-border bg-bg-app/95 px-2 shadow-lg backdrop-blur-sm sm:min-h-16 sm:gap-x-2 sm:px-4'>
+          <button type='button' onClick={clearSelection} className='grid size-11 shrink-0 cursor-pointer place-items-center rounded-full hover:bg-slate-100' aria-label='Cancelar selección'>
             <X size={20} />
           </button>
           <span className='text-sm font-medium'>1 mensaje seleccionado</span>
-          {copyError && <span role='status' className='text-xs text-red-700'>No se pudo copiar el texto.</span>}
-          <button type='button' onClick={copySelectedMessage} className='ml-auto flex cursor-pointer items-center gap-2 rounded-lg p-2 hover:bg-slate-100' aria-label='Copiar texto'>
+          {copyError && <span role='status' className='order-last basis-full pb-1 pl-2 text-xs text-red-700 sm:order-none sm:basis-auto sm:p-0'>No se pudo copiar el texto.</span>}
+          <button type='button' onClick={copySelectedMessage} className='ml-auto flex min-h-11 min-w-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg px-2 hover:bg-slate-100' aria-label='Copiar texto'>
             <Copy size={20} />
             <span className='hidden sm:inline'>Copiar</span>
           </button>
@@ -118,13 +118,13 @@ export function MessageList({ userId, conversationId }: { userId: string; conver
       )}
       <div
         ref={viewportRef}
-        className='chat-paper min-h-0 flex-1 overflow-y-auto [overflow-anchor:none]'
+        className='chat-paper min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-y-contain [overflow-anchor:none]'
         onScroll={({ currentTarget }) => {
           isAtBottom.current =
             currentTarget.scrollHeight - currentTarget.clientHeight - currentTarget.scrollTop < 2;
         }}
       >
-        <div ref={contentRef} className='flex min-h-full flex-col gap-y-5 px-4 pb-5 lg:px-8'>
+        <div ref={contentRef} className='flex min-h-full flex-col gap-y-3 px-2 pb-3 sm:gap-y-5 sm:px-4 sm:pb-5 lg:px-8'>
           <div ref={sentinelRef} className='h-1 min-h-1 shrink-0' />
           {loadingInitialPage && !error && (
             <div className='mx-auto my-auto rounded-lg bg-bg-app/85 px-4 py-2 shadow-sm' role='status' aria-label='Cargando mensajes'>

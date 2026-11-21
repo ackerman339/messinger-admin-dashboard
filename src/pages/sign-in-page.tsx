@@ -53,7 +53,7 @@ export function SignInPage() {
   };
 
   return (
-    <main className='flex min-h-screen items-center justify-center bg-background px-4'>
+    <main className='flex min-h-dvh items-center justify-center bg-background px-4 py-6'>
       <div className='w-full max-w-sm'>
         <div className='mb-8 flex flex-col items-center'>
           <div className='mb-4 flex size-16 items-center justify-center rounded-full bg-primary'>
@@ -67,7 +67,7 @@ export function SignInPage() {
           </p>
         </div>
 
-        <div className='rounded-xl border border-border bg-card p-6 shadow-xl'>
+        <div className='rounded-xl border border-border bg-card p-4 shadow-xl sm:p-6'>
           <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
             {/* Usuario */}
             <div className='space-y-2'>
@@ -83,7 +83,7 @@ export function SignInPage() {
                 {...register('adminName')}
                 className={[
                   'w-full rounded-lg border bg-background px-3 py-2.5',
-                  'text-sm text-foreground outline-none',
+                  'text-base text-foreground outline-none',
                   'placeholder:text-text-muted',
                   'transition-colors',
                   'focus:border-primary',
@@ -115,7 +115,7 @@ export function SignInPage() {
                   className={[
                     'w-full rounded-lg border bg-background',
                     'py-2.5 pl-10 pr-3',
-                    'text-sm text-foreground outline-none',
+                    'text-base text-foreground outline-none',
                     'placeholder:text-text-muted',
                     'transition-colors',
                     'focus:border-primary',

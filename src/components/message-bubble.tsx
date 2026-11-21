@@ -48,7 +48,7 @@ export function MessageBubble({ message, currentUserId, conversation, selected, 
   return (
     <article
       className={[
-        'flex p-2',
+        'flex p-1 sm:p-2',
         isOwn ? 'justify-end' : 'justify-start',
         onSelect ? 'cursor-pointer' : '',
         selected ? 'bg-accent/10 ring-1 ring-accent/10' : '',
@@ -64,7 +64,7 @@ export function MessageBubble({ message, currentUserId, conversation, selected, 
     >
       <div
         className={[
-          'min-w-0 max-w-[min(76%,620px)] rounded-lg px-3 py-2 shadow-sm',
+          'min-w-0 max-w-[92%] rounded-lg px-3 py-2 shadow-sm sm:max-w-[min(82%,620px)] lg:max-w-[min(76%,620px)]',
           isOwn ? 'rounded-br-sm bg-bg-bubble-own' : 'rounded-bl-sm bg-bg-bubble-other',
         ].join(' ')}
       >

@@ -7,7 +7,7 @@ interface UseInfiniteScrollSentinelParams {
   rootMargin?: string;
 }
 
-export function useInfiniteScrollSentinel<TElement extends Element = HTMLTableRowElement>({
+export function useInfiniteScrollSentinel<TElement extends Element = HTMLDivElement>({
   onIntersect,
   enabled = true,
   rootRef,

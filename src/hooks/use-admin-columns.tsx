@@ -42,8 +42,9 @@ export function useAdminColumns({ onDeleteAdmin }: UseAdminColumnsParams) {
               e.stopPropagation();
               onDeleteAdmin(row.original);
             }}
-            className='rounded-md p-1.5 text-destructive hover:bg-destructive/10'
+            className='grid size-11 cursor-pointer place-items-center rounded-md text-destructive hover:bg-destructive/10'
             title='Eliminar administrador'
+            aria-label='Eliminar administrador'
           >
             <Trash2 className='size-4' />
           </button>

@@ -11,7 +11,7 @@ export function ConversationMessagesPage() {
   if (!userId || !conversationId) return null;
 
   return (
-    <div className='flex h-[calc(100dvh-2rem)] flex-col'>
+    <div className='flex min-h-0 min-w-0 flex-1 flex-col'>
       <Breadcrumb
         items={[
           { label: 'Usuarios', to: '/users' },
@@ -19,7 +19,7 @@ export function ConversationMessagesPage() {
           { label: 'Mensajes' },
         ]}
       />
-      <h1 className='mb-4 text-lg font-semibold text-foreground'>Mensajes</h1>
+      <h1 className='mb-2 shrink-0 text-lg font-semibold text-foreground sm:mb-4'>Mensajes</h1>
       <MessageList key={`${userId}:${conversationId}`} userId={userId} conversationId={conversationId} />
     </div>
   );

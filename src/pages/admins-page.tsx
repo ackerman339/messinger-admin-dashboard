@@ -96,11 +96,11 @@ export function AdminsPage() {
   return (
     <div className='space-y-4'>
       <h1 className='text-lg font-semibold text-foreground'>Administradores</h1>
-      <div className='flex items-center justify-end gap-x-2 '>
+      <div className='flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:justify-end'>
         <button
           type='button'
           onClick={() => setIsCreateOpen(true)}
-          className='flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-foreground hover:opacity-90 cursor-pointer'
+          className='flex min-h-11 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-foreground hover:opacity-90'
         >
           <Plus className='size-4' />
           Crear administrador
@@ -109,7 +109,7 @@ export function AdminsPage() {
         <button
           type='button'
           onClick={() => setIsUpdateOpen(true)}
-          className='flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-foreground hover:opacity-90 cursor-pointer'
+          className='flex min-h-11 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-foreground hover:opacity-90'
         >
           <Plus className='size-4' />
           Cambiar tu clave de administrador
@@ -138,7 +138,7 @@ export function AdminsPage() {
             <input
               id='adminName'
               {...register('adminName')}
-              className='w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-accent'
+              className='min-h-11 w-full rounded-lg border border-border bg-background px-3 py-2 text-base text-foreground outline-none focus:border-accent'
             />
             {errors.adminName && (
               <p className='mt-1 text-xs text-destructive'>{errors.adminName.message}</p>
@@ -153,7 +153,7 @@ export function AdminsPage() {
               id='password'
               type='password'
               {...register('password')}
-              className='w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-accent'
+              className='min-h-11 w-full rounded-lg border border-border bg-background px-3 py-2 text-base text-foreground outline-none focus:border-accent'
             />
             {errors.password && (
               <p className='mt-1 text-xs text-destructive'>{errors.password.message}</p>
@@ -165,7 +165,7 @@ export function AdminsPage() {
           <button
             type='submit'
             disabled={isSubmitting}
-            className='w-full rounded-lg bg-accent py-2 text-sm font-medium text-accent-foreground hover:opacity-90 disabled:opacity-50 cursor-pointer'
+            className='min-h-11 w-full cursor-pointer rounded-lg bg-accent py-2 text-sm font-medium text-accent-foreground hover:opacity-90 disabled:opacity-50'
           >
             {isSubmitting ? 'Creando...' : 'Crear administrador'}
           </button>
@@ -187,7 +187,7 @@ export function AdminsPage() {
               id='password'
               type='password'
               {...registerUpdateForm('password')}
-              className='w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-accent'
+              className='min-h-11 w-full rounded-lg border border-border bg-background px-3 py-2 text-base text-foreground outline-none focus:border-accent'
             />
             {updateErrors.password && (
               <p className='mt-1 text-xs text-destructive'>{updateErrors.password.message}</p>
@@ -199,7 +199,7 @@ export function AdminsPage() {
           <button
             type='submit'
             disabled={isUpdateSubmiting}
-            className='w-full rounded-lg bg-accent py-2 text-sm font-medium text-accent-foreground hover:opacity-90 disabled:opacity-50 cursor-pointer'
+            className='min-h-11 w-full cursor-pointer rounded-lg bg-accent py-2 text-sm font-medium text-accent-foreground hover:opacity-90 disabled:opacity-50'
           >
             {isUpdateSubmiting ? 'Actualizando' : 'Actualizar'}
           </button>

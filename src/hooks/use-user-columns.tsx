@@ -28,7 +28,7 @@ export function useUserColumns({ onRestoreLoginKey, onDeleteUser }: UseUserColum
         cell: ({ row }) => (
           <Link
             to={`/users/${row.original.id}`}
-            className='font-medium hover:underline'
+            className='inline-flex min-h-11 items-center font-medium underline-offset-2 hover:underline'
             onClick={(e) => e.stopPropagation()}
           >
             {row.original.username}
@@ -60,15 +60,16 @@ export function useUserColumns({ onRestoreLoginKey, onDeleteUser }: UseUserColum
         id: 'acciones',
         header: 'Acciones',
         cell: (info) => (
-          <div className='flex items-center gap-2'>
+          <div className='flex flex-wrap items-center gap-1'>
             <button
               type='button'
               onClick={(e) => {
                 e.stopPropagation();
                 onRestoreLoginKey(info.row.original);
               }}
-              className='rounded-md p-1.5 text-text-secondary hover:bg-muted hover:text-foreground cursor-pointer'
+              className='grid size-11 shrink-0 cursor-pointer place-items-center rounded-md text-text-secondary hover:bg-muted hover:text-foreground'
               title='Restaurar clave de acceso'
+              aria-label='Restaurar clave de acceso'
             >
               <RotateCcw className='size-4' />
             </button>
@@ -78,8 +79,9 @@ export function useUserColumns({ onRestoreLoginKey, onDeleteUser }: UseUserColum
                 e.stopPropagation();
                 onDeleteUser(info.row.original);
               }}
-              className='rounded-md p-1.5 text-destructive hover:bg-destructive/10 cursor-pointer'
+              className='grid size-11 shrink-0 cursor-pointer place-items-center rounded-md text-destructive hover:bg-destructive/10'
               title='Eliminar usuario'
+              aria-label='Eliminar usuario'
             >
               <Trash2 className='size-4' />
             </button>

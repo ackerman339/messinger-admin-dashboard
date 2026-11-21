@@ -41,7 +41,7 @@ export function ConversationEventMessage({
 }) {
   if (message.type !== 'CALL_ACCEPTED' && message.type !== 'CALL_END') {
     return (
-      <div className='self-center rounded-lg bg-bg-app/85 px-4 py-2 text-sm text-text-secondary'>
+      <div className='max-w-full self-center rounded-lg bg-bg-app/85 px-3 py-2 text-center text-sm wrap-anywhere text-text-secondary sm:px-4'>
         {groupEventText(message, members)} · {format(new Date(message.createdAt), 'dd MMM hh:mm a', { locale: es })}
       </div>
     );
@@ -66,7 +66,7 @@ export function ConversationEventMessage({
     <div className={`flex w-full py-1 ${isOwn ? 'justify-end' : 'justify-start'}`}>
       <article
         aria-label={`${video ? 'Videollamada' : 'Llamada de voz'} ${isOwn ? 'saliente' : 'entrante'}`}
-        className={`min-w-60 max-w-[85%] rounded-xl px-3 pt-3 pb-2 shadow-sm ${
+        className={`w-60 max-w-[92%] rounded-xl px-3 pt-3 pb-2 shadow-sm sm:max-w-[85%] ${
           isOwn ? 'rounded-br-sm bg-bg-bubble-own' : 'rounded-bl-sm bg-bg-bubble-other'
         }`}
       >

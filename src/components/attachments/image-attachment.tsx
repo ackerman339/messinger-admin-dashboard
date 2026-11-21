@@ -53,7 +53,7 @@ export function ImageAttachment({ attachmentId, fileName }: ImageAttachmentProps
 
   if (isLoading) {
     return (
-      <div className='flex h-40 w-64 items-center justify-center rounded-lg bg-slate-100'>
+      <div className='flex h-40 w-64 max-w-full items-center justify-center rounded-lg bg-slate-100'>
         <LoaderCircle className='animate-spin text-accent' size={22} />
       </div>
     );
@@ -61,7 +61,7 @@ export function ImageAttachment({ attachmentId, fileName }: ImageAttachmentProps
 
   if (error || !url) {
     return (
-      <div className='flex h-20 w-64 items-center justify-center rounded-lg bg-slate-100 text-sm text-text-secondary'>
+      <div className='flex h-20 w-64 max-w-full items-center justify-center rounded-lg bg-slate-100 px-2 text-center text-sm text-text-secondary'>
         No se pudo cargar la imagen
       </div>
     );

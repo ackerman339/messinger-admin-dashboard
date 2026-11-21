@@ -15,10 +15,10 @@ export function Dialog({ open, onOpenChange, title, description, children }: Dia
   return (
     <RadixDialog.Root open={open} onOpenChange={onOpenChange}>
       <RadixDialog.Portal>
-        <RadixDialog.Overlay className='fixed inset-0 bg-black/60 data-[state=open]:animate-in data-[state=open]:fade-in' />
-        <RadixDialog.Content className='fixed top-1/2 left-1/2 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border border-border bg-background p-6 shadow-xl'>
-          <div className='mb-4 flex items-start justify-between'>
-            <div>
+        <RadixDialog.Overlay className='fixed inset-0 z-40 bg-black/60 data-[state=open]:animate-in data-[state=open]:fade-in' />
+        <RadixDialog.Content className='fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh_-_1.5rem)] w-[calc(100%_-_1.5rem)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain rounded-xl border border-border bg-background p-4 shadow-xl sm:p-6'>
+          <div className='mb-4 flex items-start justify-between gap-2'>
+            <div className='min-w-0 wrap-anywhere'>
               <RadixDialog.Title className='text-base font-semibold text-foreground'>
                 {title}
               </RadixDialog.Title>
@@ -28,8 +28,8 @@ export function Dialog({ open, onOpenChange, title, description, children }: Dia
                 </RadixDialog.Description>
               )}
             </div>
-            <RadixDialog.Close className='rounded-md p-1 text-text-secondary hover:bg-muted'>
-              <X className='size-4' />
+            <RadixDialog.Close aria-label='Cerrar' className='grid size-11 shrink-0 cursor-pointer place-items-center rounded-md text-text-secondary hover:bg-muted'>
+              <X className='size-4' aria-hidden='true' />
             </RadixDialog.Close>
           </div>
           {children}

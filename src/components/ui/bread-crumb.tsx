@@ -13,7 +13,7 @@ interface BreadcrumbProps {
 
 export function Breadcrumb({ items }: BreadcrumbProps) {
   return (
-    <nav aria-label='Breadcrumb' className='mb-4 flex items-center gap-1.5 text-sm'>
+    <nav aria-label='Ruta de navegación' className='mb-2 flex shrink-0 flex-wrap items-center gap-x-1.5 gap-y-0.5 text-sm sm:mb-4'>
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
 
@@ -31,7 +31,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
                 {item.label}
               </span>
             )}
-            {!isLast && <ChevronRight className='size-3.5 text-text-secondary' />}
+            {!isLast && <ChevronRight className='size-3.5 shrink-0 text-text-secondary' aria-hidden='true' />}
           </Fragment>
         );
       })}

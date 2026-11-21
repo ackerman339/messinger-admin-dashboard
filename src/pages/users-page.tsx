@@ -91,11 +91,11 @@ export function UsersPage() {
   return (
     <div className='space-y-4'>
       <h1 className='text-lg font-semibold text-foreground'>Usuarios</h1>
-      <div className='flex items-center justify-end gap-x-2 '>
+      <div className='flex sm:justify-end'>
         <button
           type='button'
           onClick={() => setIsCreateOpen(true)}
-          className='flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-foreground hover:opacity-90 cursor-pointer'
+          className='flex min-h-11 w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-foreground hover:opacity-90 sm:w-auto'
         >
           <Plus className='size-4' />
           Crear nuevo usuario
@@ -117,12 +117,12 @@ export function UsersPage() {
         title='Clave de acceso restaurada'
         description='Copia esta clave ahora — no se volverá a mostrar.'
       >
-        <div className='flex items-center justify-between rounded-lg border border-border bg-muted/30 px-3 py-2'>
-          <code className='font-mono text-sm text-foreground'>{restoredKey}</code>
+        <div className='flex flex-wrap items-center justify-between gap-x-2 rounded-lg border border-border bg-muted/30 px-3 py-1'>
+          <code className='min-w-0 font-mono text-sm wrap-anywhere text-foreground'>{restoredKey}</code>
           <button
             type='button'
             onClick={() => restoredKey && navigator.clipboard.writeText(restoredKey)}
-            className='text-xs text-accent-foreground hover:underline cursor-pointer'
+            className='min-h-11 cursor-pointer px-2 text-sm text-accent-foreground hover:underline'
           >
             Copiar
           </button>
@@ -162,7 +162,7 @@ export function UsersPage() {
               <input
                 id='username'
                 {...register('username')}
-                className='w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-accent'
+                className='min-h-11 w-full rounded-lg border border-border bg-background px-3 py-2 text-base text-foreground outline-none focus:border-accent'
               />
               {errors.username && (
                 <p className='mt-1 text-xs text-destructive'>{errors.username.message}</p>
@@ -174,18 +174,18 @@ export function UsersPage() {
             <button
               type='submit'
               disabled={isSubmitting}
-              className='w-full rounded-lg bg-accent py-2 text-sm font-medium text-accent-foreground hover:opacity-90 disabled:opacity-50 cursor-pointer'
+              className='min-h-11 w-full cursor-pointer rounded-lg bg-accent py-2 text-sm font-medium text-accent-foreground hover:opacity-90 disabled:opacity-50'
             >
               {isSubmitting ? 'Creando...' : 'Crear'}
             </button>
           </form>
         ) : (
-          <div className='flex items-center justify-between rounded-lg border border-border bg-muted/30 px-3 py-2'>
-            <code className='font-mono text-sm text-foreground'>{newUser.loginKey}</code>
+          <div className='flex flex-wrap items-center justify-between gap-x-2 rounded-lg border border-border bg-muted/30 px-3 py-1'>
+            <code className='min-w-0 font-mono text-sm wrap-anywhere text-foreground'>{newUser.loginKey}</code>
             <button
               type='button'
               onClick={() => navigator.clipboard.writeText(newUser.loginKey)}
-              className='text-xs text-accent-foreground hover:underline cursor-pointer'
+              className='min-h-11 cursor-pointer px-2 text-sm text-accent-foreground hover:underline'
             >
               Copiar
             </button>

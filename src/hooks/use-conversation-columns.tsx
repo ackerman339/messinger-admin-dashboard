@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { Link } from 'react-router-dom';
 
 import type { ColumnDef } from '@tanstack/react-table';
 import type { TableFeatures } from '@lib/table-feature';
@@ -18,13 +19,19 @@ export function useConversationColumns({ userId }: { userId: string }) {
         header: 'Conversó con',
         accessorKey: 'members',
         cell: ({ row }) => {
+          const { id, members } = row.original;
+          const participants = members
+            .filter(({ user }) => user.id !== userId)
+            .map(({ user }) => user.username)
+            .join(', ');
           return (
-            <p className='truncate max-w-80'>
-              {row.original.members
-                .filter((member) => member.user.id !== userId)
-                .map((conversation) => conversation.user.username)
-                .join(', ')}
-            </p>
+            <Link
+              to={`/users/${userId}/conversations/${id}`}
+              onClick={(event) => event.stopPropagation()}
+              className='inline-flex min-h-11 items-center font-medium underline-offset-2 hover:underline'
+            >
+              {participants || 'Ver mensajes'}
+            </Link>
           );
         },
       },
