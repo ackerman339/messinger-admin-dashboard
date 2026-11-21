@@ -6,7 +6,7 @@ import type {
   User,
   RestoreLoginKeyResult,
   Conversation,
-  Message,
+  ListConversationMessagesResult,
   Pagination,
   PaginationParams,
 } from '@/types';
@@ -41,7 +41,7 @@ export const userService = {
   },
 
   listConversationMessages: async (data: ListUserMessagesDto) => {
-    const response = await httpClient.get<ApiResponse<Pagination<Message>>>(
+    const response = await httpClient.get<ApiResponse<ListConversationMessagesResult>>(
       '/admin/list-conversation-messages',
       { params: data },
     );

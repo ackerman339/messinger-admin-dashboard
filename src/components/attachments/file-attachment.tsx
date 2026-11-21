@@ -90,11 +90,11 @@ export function FileAttachment({ attachmentId, fileName, contentType }: FileAtta
       <File size={24} className='shrink-0 text-accent' />
 
       <div className='min-w-0 flex-1'>
-        <p className='truncate text-sm font-medium text-text-secondary'>{fileName}</p>
+        <p className='truncate text-sm font-medium text-text-primary'>{fileName}</p>
         <p className='truncate text-xs text-text-secondary'>{contentType}</p>
       </div>
 
-      <Download size={20} className='shrink-0 text-accent' />
+      <Download size={20} className='shrink-0 text-text-secondary' />
     </a>
   );
 }

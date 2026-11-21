@@ -51,6 +51,13 @@ export interface Conversation {
   members: Members[];
 }
 
+export type ConversationParticipant = { userId: string; username: string | null };
+
+export type ConversationHistoryDetails = {
+  type: ConversationType;
+  members: ConversationParticipant[];
+};
+
 export interface MessageAttachment {
   id: string;
   messageId: string;
@@ -64,16 +71,25 @@ export interface MessageAttachment {
 export interface Message {
   id: string;
   conversationId: string;
-  senderId: string;
+  senderId?: string;
   createdAt: string;
   attachments: MessageAttachment[];
   content: string;
-  type: 'MESSAGE' | string;
+  type: string;
+  actorId?: string;
+  targetUserId?: string | null;
+  metadata?: Record<string, unknown>;
+  location?: LocationState;
+  deliveries?: { userId: string; status: MessageDeliveryStatus }[];
 }
 
-export interface ListConversationMessagesResult {
-  page: Message[];
-  nextCursor: string | null;
+export type MessageDeliveryStatus = 'SENT' | 'DELIVERED' | 'READ';
+
+export type LocationPoint = { latitude: number; longitude: number; capturedAt: number };
+export type LocationState = LocationPoint & { expiresAt?: number; stoppedAt?: number };
+
+export interface ListConversationMessagesResult extends Pagination<Message> {
+  conversation?: ConversationHistoryDetails | null;
 }
 
 export type DownloadDto = {

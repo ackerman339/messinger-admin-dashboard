@@ -15,8 +15,6 @@ export function useInfiniteScrollSentinel<TElement extends Element = HTMLTableRo
 }: UseInfiniteScrollSentinelParams) {
   const sentinelRef = useRef<TElement | null>(null);
 
-  const lockedRef = useRef(false);
-
   const onIntersectRef = useRef(onIntersect);
 
   useEffect(() => {
@@ -31,6 +29,7 @@ export function useInfiniteScrollSentinel<TElement extends Element = HTMLTableRo
       return;
     }
 
+    let locked = false;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry) {
@@ -40,17 +39,17 @@ export function useInfiniteScrollSentinel<TElement extends Element = HTMLTableRo
         if (!entry.isIntersecting) {
           // Allow another load once the sentinel
           // leaves the intersection area.
-          lockedRef.current = false;
+          locked = false;
           return;
         }
 
         // Prevent multiple loads while the sentinel
         // remains visible.
-        if (lockedRef.current) {
+        if (locked) {
           return;
         }
 
-        lockedRef.current = true;
+        locked = true;
 
         onIntersectRef.current();
       },

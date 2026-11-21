@@ -124,6 +124,8 @@ export function useCursorPagination<TItem>({
     loadPage(null);
   }, [loadPage]);
 
+  const retry = useCallback(() => loadPage(nextCursor), [loadPage, nextCursor]);
+
   return {
     items,
     hasMore,
@@ -132,5 +134,6 @@ export function useCursorPagination<TItem>({
     setItems,
     loadMore,
     refresh,
+    retry,
   };
 }
